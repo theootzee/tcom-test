@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUserRequest extends FormRequest
+class StoreLeaveRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,10 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "firstname" => "regex:/^([A-ZŠĐČĆŽ][a-zšđčćž\-']{2,50})(\s[A-ZŠĐČĆŽ][a-zšđčćž\-']{2,50})*$/",
-            "lastname" => "regex:/^([A-ZŠĐČĆŽ][a-zšđčćž\-']{2,100})(\s[A-ZŠĐČĆŽ][a-zšđčćž\-']{2,100})*$/",
-            "email" => "email",
-            "role_id" => "required|exists:roles",
-            "team_id" => "sometimes",
+            // 'date_from' => 'required|date_format:YYYY-mm-dd',
+            // 'date_to' => 'required|date_format:YYYY-mm-dd|gt:date_from',
+            // // 'user_id' => 'required|exists:users,id',
+            // // 'leave_type_id' => 'required|exists:leave_types,id'
         ];
     }
 }

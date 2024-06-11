@@ -40,19 +40,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-
+    
     public static function login($email, $password) : User {
 
         return  User::where([
@@ -73,6 +61,16 @@ class User extends Authenticatable
     }
 
     public static function saveToken($token, $id) {
-        User::where('id',$id)->update(['remember_token' => $token]);
+        User::where('id', $id)->update(['remember_token' => $token]);
+    }
+
+    public static function deleteUser($id) : void
+    {
+        User::destroy($id);
+    }
+
+    public static function getOneUser($id) : User
+    {
+        return User::firstOrFail($id);
     }
 }

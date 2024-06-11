@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('lastname', 100);
             $table->string('email')->unique();
             $table->string('password');
-            $table->integer('vacation_days')->default(20);
-            $table->integer('free_days')->default(5);
+            $table->integer('vacation_days')->nullable();
+            $table->integer('free_days')->nullable();
             $table->foreignIdFor(Role::class)->constrained()->noActionOnDelete();
             $table->foreignIdFor(Team::class)->nullable()->constrained()->noActionOnDelete();
             $table->rememberToken();

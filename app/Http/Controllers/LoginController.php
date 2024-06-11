@@ -23,8 +23,9 @@ class LoginController extends Controller
             }
 
             $role_name = Role::getRole($user->role_id)->role_name;
-            $token = $user->createToken('my-app-token', ["$role_name"])->plainTextToken;           
-            
+            $token = $user->createToken('my-app-token', ["$role_name"])->plainTextToken;     
+            User::saveToken($token, $user->id); 
+                        
             return response()->json(
                 ["user" => $user,
                 "token" => $token]
