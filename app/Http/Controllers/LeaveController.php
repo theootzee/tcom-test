@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RespondLeaveRequest;
 use App\Http\Requests\StoreLeaveRequest;
+use App\Http\Requests\UpdateLeaveRequest;
 use App\Models\Leave;
 use App\Models\User;
 use Illuminate\Database\QueryException;
@@ -15,14 +16,6 @@ use Illuminate\Support\Facades\Log;
 
 class LeaveController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -123,14 +116,7 @@ class LeaveController extends Controller
             return response(null, 500);
         }        
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        
-    }
+   
 
     /**
      * Remove the specified resource from storage.
@@ -191,7 +177,7 @@ class LeaveController extends Controller
     {
         try{
             $result = Leave::getAllTeamLeaves($user_id, $team_id);
-            dd($result);
+            return response()->json($result);
         }
         catch(QueryException $e) {
             Log::critical($e->getMessage());
