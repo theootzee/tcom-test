@@ -30,7 +30,7 @@ class LeaveController extends Controller
     {
         
         $team_id = $request->team_id;
-
+    
         try{
             $team_requests = Leave::getTeamLeaves($team_id);
 
@@ -45,12 +45,12 @@ class LeaveController extends Controller
                 
                 $days = parent::calculateLeaveDays($request->date_from, $request->date_to);
 
-                $user_leave_info = User::getDays($request->leave_type_id, $request->user_id);
+                $user_leave_info = User::getDays($request->user_id);
                 
                 $enough_days = false;
                 
                 //check which leave type user has requested
-                if($user_leave_info->leave_type_id == 1) {
+                if($request->leave_type_id == 1 ) {
                      $days <= $user_leave_info->vacation_days ? $enough_days = true : $enough_days = false;
                 }
                 else{
@@ -91,9 +91,37 @@ class LeaveController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
+        
+        try{
+            $requestedLeaves = User::getAllRequestedLeavesForUser($id);
+            return response()->json($requestedLeaves);
+        }
+        catch(QueryException $e) {
+            Log::critical($e->getMessage());
+            return response(null, 400);
+        }
+        catch(\Exception $e) {
+            Log::debug($e->getMessage());
+            return response(null, 500);
+        }        
+    }
+
+    public function getLeaveHistory($id) 
+    {
+        try{
+            $leaveHistory = User::getAllRespondedLeavesForUser($id);
+            return response()->json($leaveHistory);
+        }
+        catch(QueryException $e) {
+            Log::critical($e->getMessage());
+            return response(null, 400);
+        }
+        catch(\Exception $e) {
+            Log::debug($e->getMessage());
+            return response(null, 500);
+        }        
     }
 
     /**
@@ -129,21 +157,6 @@ class LeaveController extends Controller
         }
     }
 
-    public function getTeamLeaves(int $team_id)
-    {
-        try{
-            $vacations = Leave::getTeamLeaves($team_id);
-            return response()->json($vacations);
-        }        
-        catch(QueryException $e) {
-            Log::critical($e->getMessage());
-            return response(null, 400);
-        }
-        catch(\Exception $e) {
-            Log::debug($e->getMessage());
-            return response(null, 500);
-        }
-    }
 
     public function respond(RespondLeaveRequest $request, int $id) 
     {
@@ -152,6 +165,7 @@ class LeaveController extends Controller
             $is_accepted = $request->is_accepted;
 
             DB::transaction(function () use($manager_id, $is_accepted, $id) {
+                
                 Leave::respond($id, $manager_id, $is_accepted);
                 
                 if($is_accepted == 1) {
@@ -162,6 +176,22 @@ class LeaveController extends Controller
             });
 
             return response()->json('Succesfully responded on leave request.', 204);
+        }
+        catch(QueryException $e) {
+            Log::critical($e->getMessage());
+            return response(null, 400);
+        }
+        catch(\Exception $e) {
+            Log::debug($e->getMessage());
+            return response(null, 500);
+        }
+    }
+
+    public function showTeamLeaves(int $user_id, int $team_id) 
+    {
+        try{
+            $result = Leave::getAllTeamLeaves($user_id, $team_id);
+            dd($result);
         }
         catch(QueryException $e) {
             Log::critical($e->getMessage());

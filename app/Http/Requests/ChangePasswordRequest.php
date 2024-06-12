@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTeamRequest extends FormRequest
+class ChangePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,9 @@ class StoreTeamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "unique:teams,team_name",
-            "managers" => "required|exists:users,id"
+            'password' => 'required|regex:/^[A-ZŠĐČĆŽa-zšđčćž?!&^#$%@*\/0-9]{8,15}$/',
+            'confirm_password' => 'required|same:password',
+            'user_id' => 'required|exists:users,id'
         ];
     }
 }

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('accepted')->default(0);
             $table->string('date_from', 16);
             $table->string('date_to', 16);
-            $table->foreignIdFor(User::class)->constrained()->noActionOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(LeaveType::class)->constrained()->noActionOnDelete();
             $table->timestamps();
         });

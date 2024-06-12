@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('team_user', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Team::class)->constrained()->noActionOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->noActionOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
         });
     }
 

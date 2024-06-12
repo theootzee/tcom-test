@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTeamRequest extends FormRequest
+class UpdateTeamRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class StoreTeamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "unique:teams,team_name",
-            "managers" => "required|exists:users,id"
+            'managers' => 'required|exists:users,id',
+            'name' => 'required'
         ];
     }
 }

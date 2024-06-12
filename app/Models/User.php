@@ -71,21 +71,18 @@ class User extends Authenticatable
         User::destroy($id);
     }
 
-    public static function getOneUser($id) : User
+    public static function getOneUser($id) 
     {
-        return User::firstOrFail($id);
+        return User::find($id);
     }
 
-    public static function getDays($leave_type_id, $user_id) 
+    public static function getDays($user_id) 
     {
         return DB::table('users as u')
-        ->join('leaves as l', 'u.id', '=', 'l.user_id')
-        ->join('leave_types as lt', 'l.leave_type_id', '=', 'lt.id')
         ->where([
             "u.id" => $user_id,
-            "lt.id" => $leave_type_id
         ])
-        ->get(['type', 'free_days', 'vacation_days', 'lt.id as leave_type_id'])
+        ->get(['free_days', 'vacation_days'])
         ->first();
     }
 
@@ -99,4 +96,60 @@ class User extends Authenticatable
         }
     }
 
+    public static function checkAdminsCount() 
+    {
+        return User::where('role_id', '=', 1)->count();
+    }
+
+    public static function checkManagersCountForTeam($team_id) 
+    {
+        return 
+        DB::table('users as u')
+        ->join('team_user as tu', 'u.id', '=', 'tu.user_id')
+        ->join('teams as t', 'tu.team_id', '=', 't.id')
+        ->where([
+            "t.id" => $team_id
+        ])
+        ->distinct()->count('tu.user_id');       
+    }
+
+    public static function getAllRequestedLeavesForUser($id) 
+    {
+        // $user = User::find($id)->leaves();
+        // return $user;
+        return DB::table('users as u')
+        ->join('leaves as l', 'u.id', '=', 'l.user_id')
+        ->join('leave_types as lt', 'l.leave_type_id', '=', 'lt.id')
+        ->where([
+            'u.id' => $id,
+            'mng_id' => null
+        ])
+        ->get(["date_from", "date_to", "accepted"]);
+    }
+
+    public static function getAllRespondedLeavesForUser($id) 
+    {
+        return DB::table('users as u')
+        ->join('leaves as l', 'u.id', '=', 'l.user_id')
+        ->join('leave_types as lt', 'l.leave_type_id', '=', 'lt.id')
+        ->join('users as manager', 'l.mng_id', '=', 'manager.id')
+        ->where([
+            'u.id' => $id
+        ])
+        ->get(["date_from", "date_to", "accepted", "manager.firstname as manager_firstname", "manager.lastname as manager lastname"]);
+    }
+
+    public static function updatePassword($password, $user_id) 
+    {
+        User::find($user_id)->update(['password' => $password]);
+    }
+
+    public static function changeForgotPassword($email, $password) 
+    {
+        User::where("email", $email)
+        ->update([
+            "password" => sha1($password)
+        ]);
+    }
+    
 }

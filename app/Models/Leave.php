@@ -25,6 +25,7 @@ class Leave extends Model
         'leave_type_id'
     ];
 
+    //get leaves for team including user requesting for leave
     public static function getTeamLeaves($team_id) : Collection
     {
         return DB::table('users as u') 
@@ -53,5 +54,17 @@ class Leave extends Model
     public static function cancel($id) 
     {
         Leave::destroy($id);
+    }
+
+    //get all leaves for team 
+    public static function getAllTeamLeaves($team_id, $user_id) 
+    {
+        return DB::table('leaves as l')
+        ->join('users as u', 'l.user_id', '=', 'u.id')
+        ->join('teams as t', 'u.team_id', '=', 't.id')
+        ->join('leave_types as lt', 'l.leave_type_id', '=', 'lt.id')
+        ->where('t.id', '=', $team_id)
+        ->where('u.id', '!=', $user_id)
+        ->get(["date_from", "date_to", "type", "accepted"]);
     }
 }

@@ -25,7 +25,7 @@ class StoreUserRequest extends FormRequest
             "firstname" => "regex:/^([A-ZŠĐČĆŽ][a-zšđčćž\-']{2,50})(\s[A-ZŠĐČĆŽ][a-zšđčćž\-']{2,50})*$/",
             "lastname" => "regex:/^([A-ZŠĐČĆŽ][a-zšđčćž\-']{2,100})(\s[A-ZŠĐČĆŽ][a-zšđčćž\-']{2,100})*$/",
             "email" => "email",
-            "role_id" => "required|exists:roles",
+            "role_id" => "required|exists:roles,id",
             "team_id" => "sometimes",
         ];
     }
