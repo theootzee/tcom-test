@@ -7,6 +7,7 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Database\QueryException;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -17,9 +18,8 @@ class LoginController extends Controller
     {
         try{
             $user = User::login($request->email, $request->password);
-
             if(!$user) {
-                return response()->json(["User not found"], 404);
+                return response()->json(["User not found"], 422);
             }
 
             $role_name = Role::getRole($user->role_id)->role_name;

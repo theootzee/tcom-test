@@ -12,5 +12,6 @@ Route::middleware(CorsMiddleware::class)->group(function () {
         Route::apiResource('teams', TeamController::class)->middleware(['auth:sanctum','ability:admin']);
         Route::get('/leave/getTeamLeaves/{team_id}', [LeaveController::class, 'getTeamLeaves']);
         Route::apiResource('leave', LeaveController::class)->middleware(['auth:sanctum','ability:employee,manager']);
+        Route::put('/leave/respond/{id}', [LeaveController::class, 'respond']);
     Route::post('/login', LoginController::class);
 });

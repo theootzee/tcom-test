@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -41,7 +42,8 @@ class User extends Authenticatable
     ];
 
     
-    public static function login($email, $password) : User {
+    public static function login($email, $password) : User 
+    {
 
         return  User::where([
             'email' => $email,
@@ -73,4 +75,28 @@ class User extends Authenticatable
     {
         return User::firstOrFail($id);
     }
+
+    public static function getDays($leave_type_id, $user_id) 
+    {
+        return DB::table('users as u')
+        ->join('leaves as l', 'u.id', '=', 'l.user_id')
+        ->join('leave_types as lt', 'l.leave_type_id', '=', 'lt.id')
+        ->where([
+            "u.id" => $user_id,
+            "lt.id" => $leave_type_id
+        ])
+        ->get(['type', 'free_days', 'vacation_days', 'lt.id as leave_type_id'])
+        ->first();
+    }
+
+    public static function decrementLeaveDays($user_id, $leave_type_id, $days) 
+    {
+        if($leave_type_id == 1) {
+            User::find($user_id)->decrement('vacation_days', $days);
+        }
+        else{
+            User::find($user_id)->decrement('free_days', $days);
+        }
+    }
+
 }

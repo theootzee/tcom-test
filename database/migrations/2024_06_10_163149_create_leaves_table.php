@@ -17,7 +17,6 @@ return new class extends Migration
         Schema::create('leaves', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('mng_id')->nullable();
-            $table->boolean('responded')->default(0);
             $table->boolean('accepted')->default(0);
             $table->string('date_from', 16);
             $table->string('date_to', 16);
