@@ -1,0 +1,576 @@
+version: '3.7'
+services:
+
+  ########################### ADMIN SERVICE ###########################
+  admin-php-fpm:
+    container_name: admin-php-fpm
+    build:
+      context: ./../adminService/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../adminService:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  admin-nginx-server:
+    container_name: admin-nginx-server
+    build:
+      context: ./../adminService/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../adminService:/var/www
+      - ./../adminService/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - admin-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### AFFILIATE SERVICE ###########################
+  affiliateservice-php-fpm:
+    container_name: affiliateservice-php-fpm
+    build:
+      context: ./../affiliateService/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../affiliateService:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  affiliateservice-nginx-server:
+    container_name: affiliateservice-nginx-server
+    build:
+      context: ./../affiliateService/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../affiliateService:/var/www
+      - ./../affiliateService/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - affiliateservice-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+
+  ########################### CHAT CENTER ###########################
+  chatcenter-php-fpm:
+    container_name: chatcenter-php-fpm
+    build:
+      context: ./../chatCenter/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../chatCenter:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  chatcenter-nginx-server:
+    container_name: chatcenter-nginx-server
+    build:
+      context: ./../chatCenter/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../chatCenter:/var/www
+      - ./../chatCenter/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - chatcenter-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+
+  ########################### DIZZYDATES API ###########################
+  dizzydates-api-php-fpm:
+    container_name: dizzydates-api-php-fpm
+    build:
+      context: ./../dizzydates/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../dizzydates:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+    links:
+      - pegasus-db-server
+
+  dizzydates-api-nginx-server:
+    container_name: dizzydates-api-nginx-server
+    build:
+      context: ./../dizzydates/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../dizzydates:/var/www
+      - ./../dizzydates/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - dizzydates-api-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### USER SERVICE  ###########################
+  userservice-php-fpm:
+    container_name: userservice-php-fpm
+    build:
+      context: ./../userService/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../userService:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  userservice-nginx-server:
+    container_name: userservice-nginx-server
+    build:
+      context: ./../userService/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../userService:/var/www
+      - ./../userService/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - userservice-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### TOKEN SERVICE  ###########################
+  tokenservice-php-fpm:
+    container_name: tokenservice-php-fpm
+    build:
+      context: ./../tokenService/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../tokenService:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  tokenservice-nginx-server:
+    container_name: tokenservice-nginx-server
+    build:
+      context: ./../tokenService/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../tokenService:/var/www
+      - ./../tokenService/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - tokenservice-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### PROFILE SERVICE  ###########################
+  profileservice-php-fpm:
+    container_name: profileservice-php-fpm
+    build:
+      context: ./../profileService/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../profileService:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  profileservice-nginx-server:
+    container_name: profileservice-nginx-server
+    build:
+      context: ./../profileService/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../profileService:/var/www
+      - ./../profileService/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - profileservice-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### PROFILE CENTER  ###########################
+  profilecenter-php-fpm:
+    container_name: profilecenter-php-fpm
+    build:
+      context: ./../profileCenter/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../profileCenter:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  profilecenter-nginx-server:
+    container_name: profilecenter-nginx-server
+    build:
+      context: ./../profileCenter/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../profileCenter:/var/www
+      - ./../profileCenter/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - profilecenter-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### GEO SERVICE  ###########################
+  geoservice-php-fpm:
+    container_name: geoservice-php-fpm
+    build:
+      context: ./../geoLocationService/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../geoLocationService:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  geoservice-nginx-server:
+    container_name: geoservice-nginx-server
+    build:
+      context: ./../geoLocationService/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../geoLocationService:/var/www
+      - ./../geoLocationService/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - geoservice-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### POKE CENTER  ###########################
+  pokecenter-php-fpm:
+    container_name: pokecenter-php-fpm
+    build:
+      context: ./../pokeCenter/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../pokeCenter:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  pokecenter-nginx-server:
+    container_name: pokecenter-nginx-server
+    build:
+      context: ./../pokeCenter/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../pokeCenter:/var/www
+      - ./../pokeCenter/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - pokecenter-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### PEGASUS CENTER ###########################
+  pegasuscenter-php-fpm:
+    container_name: pegasuscenter-php-fpm
+    build:
+      context: ./../pegasusCenter/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../pegasusCenter:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  pegasuscenter-nginx-server:
+    container_name: pegasuscenter-nginx-server
+    build:
+      context: ./../pegasusCenter/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../pegasusCenter:/var/www
+      - ./../pegasusCenter/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - pegasuscenter-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+
+  ########################### PAYMENT SERVICE ###########################
+  paymentservice-php-fpm:
+    container_name: paymentservice-php-fpm
+    build:
+      context: ./../paymentService/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../paymentService:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  paymentservice-nginx-server:
+    container_name: paymentservice-nginx-server
+    build:
+      context: ./../paymentService/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../paymentService:/var/www
+      - ./../paymentService/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - paymentservice-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### MESSAGE SERVICE ###########################
+  messageservice-php-fpm:
+    container_name: messageservice-php-fpm
+    build:
+      context: ./../messageService/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../messageService:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  messageservice-nginx-server:
+    container_name: messageservice-nginx-server
+    build:
+      context: ./../messageService/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../messageService:/var/www
+      - ./../messageService/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - messageservice-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### MAIL SERVICE ###########################
+  mailservice-php-fpm:
+    container_name: mailservice-php-fpm
+    build:
+      context: ./../mailService/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../mailService:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  mailservice-nginx-server:
+    container_name: mailservice-nginx-server
+    build:
+      context: ./../mailService/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../mailService:/var/www
+      - ./../mailService/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - mailservice-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### LEAGUE SERVICE ###########################
+  leagueservice-php-fpm:
+    container_name: leagueservice-php-fpm
+    build:
+      context: ./../leagueService/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../leagueService:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  leagueservice-nginx-server:
+    container_name: leagueservice-nginx-server
+    build:
+      context: ./../leagueService/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../leagueService:/var/www
+      - ./../leagueService/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - leagueservice-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### CONSENT SERVICE ###########################
+  consentservice-php-fpm:
+    container_name: consentservice-php-fpm
+    build:
+      context: ./../consentService/deploy/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./../consentService:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  consentservice-nginx-server:
+    container_name: consentservice-nginx-server
+    build:
+      context: ./../consentService/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../consentService:/var/www
+      - ./../consentService/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - consentservice-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+#
+#  ########################### ADMIN UI ###########################
+#  admin-ui:
+#    container_name: admin-ui
+#    build:
+#      context: ./../admin-ui/
+#      dockerfile: ./deploy/web/Dockerfile
+#    volumes:
+#      - ./../admin-ui/:/usr/src/app
+#      - /usr/src/app/node_modules
+#    restart: always
+#    ports:
+#      - 18084:8080
+#    networks:
+#      - vozzi_network
+#
+#  ########################### CHAT CENTER UI ###########################
+#  chatcenter-ui:
+#    container_name: chatcenter-ui
+#    build:
+#      context: ./../chatCenter-ui/
+#      dockerfile: ./deploy/web/Dockerfile
+#    volumes:
+#      - ./../chatCenter-ui/:/usr/src/app
+#      - /usr/src/app/node_modules
+#    restart: always
+#    ports:
+#      - 18083:8080
+#    networks:
+#      - vozzi_network
+#
+#  ########################### DIZZYDATES UI ###########################
+  dizzydates-php-fpm:
+    container_name: dizzydates-php-fpm
+    build:
+      context: ./../dizzydates-ui/deploy/web
+      dockerfile: Dockerfile
+    volumes:
+      - ./../dizzydates-ui:/var/www
+      - /var/www/deploy
+    restart: always
+    networks:
+      - vozzi_network
+
+  dizzydates-nginx-server:
+    container_name: dizzydates-nginx-server
+    build:
+      context: ./../dizzydates/deploy/server
+      dockerfile: Dockerfile
+    volumes:
+      - ./../dizzydates-ui:/var/www
+      - ./../dizzydates-ui/deploy/server/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - dizzydates-php-fpm
+    restart: always
+    networks:
+      - vozzi_network
+#
+#  ########################### PEGASUS CENTER UI  ###########################
+#  pegasuscenter-ui:
+#    container_name: pegasuscenter-ui
+#    build:
+#      context: ./../pegasusCenter-ui
+#      dockerfile: ./deploy/web/Dockerfile
+#    volumes:
+#      - ./../pegasusCenter-ui/:/usr/src/app
+#      - /usr/src/app/node_modules
+#    restart: always
+#    ports:
+#      - 18080:8080
+#    networks:
+#      - vozzi_network
+#
+#  ########################### POKE CENTER UI ###########################
+#  pokecenter-ui:
+#    container_name: pokecenter-ui
+#    build:
+#      context: ./../pokeCenter-ui
+#      dockerfile: ./deploy/web/Dockerfile
+#    volumes:
+#      - ./../pokeCenter-ui/:/usr/src/app
+#      - /usr/src/app/node_modules
+#    restart: always
+#    ports:
+#      - 18082:8080
+#    networks:
+#      - vozzi_network
+#
+#  ########################### PROFILE CENTER UI  ###########################
+#  profilecenter-ui:
+#    container_name: profilecenter-ui
+#    build:
+#      context: ./../profileCenter-ui/
+#      dockerfile: ./deploy/web/Dockerfile
+#    volumes:
+#      - ./../profileCenter-ui/:/usr/src/app
+#      - /usr/src/app/node_modules
+#    restart: always
+#    ports:
+#      - 18081:8080
+#    networks:
+#      - vozzi_network
+
+  ########################### REVERSE PROXY NGINX SERVER ###########################
+  reverse-proxy-web-server:
+    container_name: reverse-proxy-web-server
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    networks:
+      - vozzi_network
+
+  ########################### DB SERVER ###########################
+  pegasus-db-server:
+    image: mysql:5.7
+    container_name: pegasus-db-server
+    volumes:
+      - pegasus-db-server:/var/lib/mysql
+      - ./MySql/init:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '33061:3306'
+    networks:
+      - vozzi_network
+    restart: always
+
+volumes:
+  pegasus-db-server:
+
+networks:
+  vozzi_network:
+    driver: bridge
